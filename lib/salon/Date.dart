@@ -4,25 +4,35 @@ import 'package:bookspot/salon/confirma.dart';
 import 'package:bookspot/salon/service.dart';
 import 'package:bookspot/settings.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:time_range/time_range.dart';
 
-class DateTime extends StatefulWidget {
+import '../ContainerClass.dart';
+
+class Datetime extends StatefulWidget {
+
+  String cat;
+  Shop shop;
+  Customer customer;
+  OrderDetails orderDetails;
+
+  Datetime(this.cat, this.customer, this.shop, this.orderDetails);
+
   @override
-  _DateTimeState createState() => _DateTimeState();
+  _DateTimeState createState() => _DateTimeState(cat, customer, shop, orderDetails);
 }
 
-class _DateTimeState extends State<DateTime> {
-  bool isButtonPressed = false;
-  bool isButtonPressed1 = false;
-  bool isButtonPressed2 = false;
-  bool isButtonPressed3 = false;
-  bool isButtonPressed4 = false;
-  bool isButtonPressed5 = false;
-  bool isButtonPressed6 = false;
-  bool isButtonPressed7 = false;
-  bool isButtonPressed8 = false;
+class _DateTimeState extends State<Datetime> {
+  List<bool> isButtonPressed = [false,false,false,false,false,false,false,false,false];
+  Shop shop;
+  String cat;
+  Customer customer;
+  OrderDetails orderDetails;
+
+  _DateTimeState(this.cat, this.customer, this.shop, this.orderDetails);
+
   @override
   CalendarController _controller;
   void initState() {
@@ -40,142 +50,8 @@ class _DateTimeState extends State<DateTime> {
         backgroundColor: HexColor("#f9692d"),
         elevation: 0.0,
       ),
-      endDrawer: Container(
-        width: 230,
-        child: Drawer(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 30, right: 30),
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(
-                    right: 140,
-                  ),
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.clear,
-                    ),
-                    iconSize: 40,
-                    color: Colors.black,
-                    splashColor: Colors.purple,
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, "myRoute");
-                  },
-                  child: new Text(
-                    "Profile Settings",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, "myRoute");
-                  },
-                  child: new Text(
-                    "Upcoming Spot ",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => Favorites()));
-                  },
-                  child: new Text(
-                    "Favorites            ",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, "myRoute");
-                  },
-                  child: new Text(
-                    "History               ",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => PrivacyPo()));
-                  },
-                  child: new Text(
-                    "Privacy Policy   ",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => Setting()));
-                  },
-                  child: new Text(
-                    "Settings             ",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, "myRoute");
-                  },
-                  child: new Text(
-                    "Log Out             ",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
+
+
       body: Form(
         child: Stack(fit: StackFit.expand, children: <Widget>[
           Padding(
@@ -183,39 +59,36 @@ class _DateTimeState extends State<DateTime> {
             child: Center(
               child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 300),
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.arrow_back_ios,
+                  Row(
+                    children :[
+                      IconButton(
+                        icon: Icon(
+                          Icons.arrow_back_ios,
+                        ),
+                        iconSize: 30,
+                        color: Colors.black,
+                        splashColor: Colors.purple,
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
                       ),
-                      iconSize: 30,
-                      color: Colors.black,
-                      splashColor: Colors.purple,
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Services()));
-                      },
-                    ),
+
+                      Text(
+                        "Select Date",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold
+                        ),
+                      ),
+                    ]
                   ),
+
+
                   SizedBox(
                     height: 20,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 250),
-                    child: Text(
-                      "Date",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
+
                   Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(24.0),
@@ -233,19 +106,23 @@ class _DateTimeState extends State<DateTime> {
                       calendarController: _controller,
                     ),
                   ),
+
+
                   SizedBox(
                     height: 30,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 250),
-                    child: Text(
-                      "Time",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold),
-                    ),
+                  Text(
+                    "Select Time Slot",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold),
                   ),
+
+                  SizedBox(
+                    height: 20,
+                  ),
+
                   Column(
                     children: [
                       Row(
@@ -256,15 +133,15 @@ class _DateTimeState extends State<DateTime> {
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
                               child: Text(
-                                "09:30 am",
+                                "06:00 - 08:00",
                                 style: TextStyle(fontSize: 15),
                               ),
-                              color: isButtonPressed
+                              color: isButtonPressed[0]
                                   ? Colors.orange[800]
                                   : Colors.white,
                               onPressed: () {
                                 setState(() {
-                                  isButtonPressed = !isButtonPressed;
+                                  isButtonPressed[0] = !isButtonPressed[0];
                                 });
                                 // Navigator.pushReplacement(
                                 //     context,
@@ -273,6 +150,7 @@ class _DateTimeState extends State<DateTime> {
                               },
                             ),
                           ),
+
                           SizedBox(
                             width: 5,
                           ),
@@ -282,15 +160,15 @@ class _DateTimeState extends State<DateTime> {
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
                               child: Text(
-                                "10:00 am",
+                                "08:00 - 10:00",
                                 style: TextStyle(fontSize: 15),
                               ),
-                              color: isButtonPressed1
+                              color: isButtonPressed[1]
                                   ? Colors.orange[800]
                                   : Colors.white,
                               onPressed: () {
                                 setState(() {
-                                  isButtonPressed1 = !isButtonPressed1;
+                                  isButtonPressed[1] = !isButtonPressed[1];
                                 });
                                 // Navigator.pushReplacement(
                                 //     context,
@@ -299,6 +177,7 @@ class _DateTimeState extends State<DateTime> {
                               },
                             ),
                           ),
+
                           SizedBox(
                             width: 5,
                           ),
@@ -308,97 +187,15 @@ class _DateTimeState extends State<DateTime> {
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
                               child: Text(
-                                "10:30 am",
+                                "10:00 - 11:30",
                                 style: TextStyle(fontSize: 15),
                               ),
-                              color: isButtonPressed2
+                              color: isButtonPressed[2]
                                   ? Colors.orange[800]
                                   : Colors.white,
                               onPressed: () {
                                 setState(() {
-                                  isButtonPressed2 = !isButtonPressed2;
-                                });
-                                // Navigator.pushReplacement(
-                                //     context,
-                                //     MaterialPageRoute(
-                                //         builder: (context) => Restaurant()));
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Expanded(
-                            child: RaisedButton(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              child: Text(
-                                "11:00 am",
-                                style: TextStyle(fontSize: 15),
-                              ),
-                              color: isButtonPressed3
-                                  ? Colors.orange[800]
-                                  : Colors.white,
-                              onPressed: () {
-                                setState(() {
-                                  isButtonPressed3 = !isButtonPressed3;
-                                });
-                                // Navigator.pushReplacement(
-                                //     context,
-                                //     MaterialPageRoute(
-                                //         builder: (context) => Restaurant()));
-                              },
-                            ),
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Expanded(
-                            child: RaisedButton(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              child: Text(
-                                "11:30 am",
-                                style: TextStyle(fontSize: 15),
-                              ),
-                              color: isButtonPressed4
-                                  ? Colors.orange[800]
-                                  : Colors.white,
-                              onPressed: () {
-                                setState(() {
-                                  isButtonPressed4 = !isButtonPressed4;
-                                });
-                                // Navigator.pushReplacement(
-                                //     context,
-                                //     MaterialPageRoute(
-                                //         builder: (context) => Restaurant()));
-                              },
-                            ),
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Expanded(
-                            child: RaisedButton(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              child: Text(
-                                "12:00 pm",
-                                style: TextStyle(fontSize: 15),
-                              ),
-                              color: isButtonPressed5
-                                  ? Colors.orange[800]
-                                  : Colors.white,
-                              onPressed: () {
-                                setState(() {
-                                  isButtonPressed5 = !isButtonPressed5;
+                                  isButtonPressed[2] = !isButtonPressed[2];
                                 });
                                 // Navigator.pushReplacement(
                                 //     context,
@@ -420,15 +217,15 @@ class _DateTimeState extends State<DateTime> {
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
                               child: Text(
-                                "12:00 pm",
+                                "11:30 - 13:00",
                                 style: TextStyle(fontSize: 15),
                               ),
-                              color: isButtonPressed6
+                              color: isButtonPressed[3]
                                   ? Colors.orange[800]
                                   : Colors.white,
                               onPressed: () {
                                 setState(() {
-                                  isButtonPressed6 = !isButtonPressed6;
+                                  isButtonPressed[3] = !isButtonPressed[3];
                                 });
                                 // Navigator.pushReplacement(
                                 //     context,
@@ -446,15 +243,15 @@ class _DateTimeState extends State<DateTime> {
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
                               child: Text(
-                                "12:00 pm",
+                                "13:00 - 15:30",
                                 style: TextStyle(fontSize: 15),
                               ),
-                              color: isButtonPressed7
+                              color: isButtonPressed[4]
                                   ? Colors.orange[800]
                                   : Colors.white,
                               onPressed: () {
                                 setState(() {
-                                  isButtonPressed7 = !isButtonPressed7;
+                                  isButtonPressed[4] = !isButtonPressed[4];
                                 });
                                 // Navigator.pushReplacement(
                                 //     context,
@@ -472,20 +269,98 @@ class _DateTimeState extends State<DateTime> {
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
                               child: Text(
-                                "12:00 pm",
+                                "15:30 - 17:30",
                                 style: TextStyle(fontSize: 15),
                               ),
-                              color: isButtonPressed8
+                              color: isButtonPressed[5]
                                   ? Colors.orange[800]
                                   : Colors.white,
                               onPressed: () {
                                 setState(() {
-                                  isButtonPressed8 = !isButtonPressed8;
+                                  isButtonPressed[5] = !isButtonPressed[5];
                                 });
                                 // Navigator.pushReplacement(
                                 //     context,
                                 //     MaterialPageRoute(
                                 //         builder: (context) => Restaurant()));
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Expanded(
+                            child: RaisedButton(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: Text(
+                                "17:30 - 19:30",
+                                style: TextStyle(fontSize: 15),
+                              ),
+                              color: isButtonPressed[6]
+                                  ? Colors.orange[800]
+                                  : Colors.white,
+                              onPressed: () {
+                                setState(() {
+                                  isButtonPressed[6] = !isButtonPressed[6];
+                                });
+                                // Navigator.pushReplacement(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //         builder: (context) => Restaurant()));
+                              },
+                            ),
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Expanded(
+                            child: RaisedButton(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: Text(
+                                "19:30 - 21:30",
+                                style: TextStyle(fontSize: 15),
+                              ),
+                              color: isButtonPressed[7]
+                                  ? Colors.orange[800]
+                                  : Colors.white,
+                              onPressed: () {
+                                setState(() {
+                                  isButtonPressed[7] = !isButtonPressed[7];
+                                });
+                                // Navigator.pushReplacement(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //         builder: (context) => Restaurant()));
+                              },
+                            ),
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Expanded(
+                            child: RaisedButton(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: Text(
+                                "21:00 - 23:30",
+                                style: TextStyle(fontSize: 15),
+                              ),
+                              color: isButtonPressed[8]
+                                  ? Colors.orange[800]
+                                  : Colors.white,
+                              onPressed: () {
+                                setState(() {
+                                  isButtonPressed[8] = !isButtonPressed[8];
+                                });
                               },
                             ),
                           ),
@@ -516,13 +391,14 @@ class _DateTimeState extends State<DateTime> {
                   //   timeBlock: 30,
                   //   onRangeCompleted: (range) => setState(() => print(range)),
                   // )
+
                   SizedBox(
-                    height: 20,
+                    height: 40,
                   ),
                   MaterialButton(
                     height: 52,
                     minWidth: 323,
-                    color: Colors.blue[900],
+                    color: HexColor("#f9692d"),
                     textColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(24.0),
@@ -532,10 +408,75 @@ class _DateTimeState extends State<DateTime> {
                       style: TextStyle(color: Colors.white, fontSize: 20.0),
                     ),
                     onPressed: () {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Confiramation()));
+                      int count = 0, pos = -1;
+                      for(int i=0; i<isButtonPressed.length; i++){
+                        if(isButtonPressed[i]) {
+                          count++;
+                          pos = i;
+                        }
+                      }
+
+                      if(count == 0)
+                        Fluttertoast.showToast(
+                          msg: "Please select a Time Slot",
+                          gravity: ToastGravity.BOTTOM,
+                          backgroundColor: Colors.red,
+                          textColor: Colors.white,
+                        );
+                      else if(count == 1){
+                        switch(pos){
+                          case 0:
+                            orderDetails.bTime ="06:00 - 08:00";
+                            break;
+
+                          case 1:
+                            orderDetails.bTime ="08:00 - 10:00";
+                            break;
+
+                          case 2:
+                            orderDetails.bTime ="10:00 - 11:30";
+                            break;
+                          case 3:
+                            orderDetails.bTime ="11:30 - 13:00";
+                            break;
+
+                          case 4:
+                            orderDetails.bTime ="13:00 - 15:30";
+                            break;
+
+                          case 5:
+                            orderDetails.bTime ="15:30 - 17:30";
+                            break;
+                          case 6:
+                            orderDetails.bTime ="17:30 - 19:30";
+                            break;
+
+                          case 7:
+                            orderDetails.bTime ="19:30 - 21:30";
+                            break;
+
+                          case 8:
+                            orderDetails.bTime ="21:30 - 23:30";
+                            break;
+                        }
+
+                        orderDetails.bDate = _controller.selectedDay.toString();
+                        print("orderDetails = $orderDetails");
+
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Confiramation(cat, shop, orderDetails)));
+
+                      }else if (count > 1 )
+
+                        Fluttertoast.showToast(
+                          msg: "Please select single time Slot\n and unselect others",
+                          gravity: ToastGravity.BOTTOM,
+                          backgroundColor: Colors.red,
+                          textColor: Colors.white,
+                        );
+
                     },
                     splashColor: Colors.redAccent,
                   ),

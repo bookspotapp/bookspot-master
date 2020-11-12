@@ -3,19 +3,29 @@ import 'package:bookspot/clinic/firstclinic.dart';
 import 'package:bookspot/diagnostic/firstdiag.dart';
 import 'package:bookspot/favorites.dart';
 import 'package:bookspot/history.dart';
+import 'package:bookspot/loginpage.dart';
 import 'package:bookspot/privacy.dart';
 import 'package:bookspot/profile.dart';
 import 'package:bookspot/restaurant/firstres.dart';
 import 'package:bookspot/salon/first.dart';
+import 'package:bookspot/salon/upcoming.dart';
 import 'package:bookspot/settings.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
-import 'main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'ContainerClass.dart';
 
 class HomePage extends StatefulWidget {
+  Customer customer;
+
+  HomePage(this.customer);
   @override
-  _HomePageState createState() => _HomePageState();
+  _HomePageState createState() => _HomePageState(customer);
 }
 
 class _HomePageState extends State<HomePage> {
@@ -25,8 +35,17 @@ class _HomePageState extends State<HomePage> {
   bool isButtonPressed3 = false;
   bool isButtonPressed4 = false;
   bool isButtonPressed5 = false;
+  Customer customer;
+  String favList = "";
 
-  String name = customer.nm;
+  _HomePageState(this.customer);
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    getFav();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +75,7 @@ class _HomePageState extends State<HomePage> {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ProfileSetting()));
+                              builder: (context) => ProfileSetting(customer)));
                     },
                     child: new Text(
                       "Profile Settings",
@@ -72,7 +91,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushNamed(context, "myRoute");
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Upcoming()));
                     },
                     child: new Text(
                       "Upcoming Spot ",
@@ -88,11 +107,10 @@ class _HomePageState extends State<HomePage> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context) => Favorites()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => Favorites(customer)));
                     },
                     child: new Text(
-                      "Favorites            ",
+                      "Favourites            ",
                       style: TextStyle(
                           color: Colors.black,
                           fontSize: 20,
@@ -106,7 +124,7 @@ class _HomePageState extends State<HomePage> {
                   GestureDetector(
                     onTap: () {
                       Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context) => History()));
+                          MaterialPageRoute(builder: (context) => History(customer)));
                     },
                     child: new Text(
                       "History               ",
@@ -134,29 +152,14 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
 
-                  SizedBox(
-                    height: 20,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context) => Setting()));
-                    },
-                    child: new Text(
-                      "Settings             ",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
+
 
                   SizedBox(
                     height: 20,
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushNamed(context, "myRoute");
+                      logout();
                     },
                     child: new Text(
                       "Log Out             ",
@@ -181,7 +184,7 @@ class _HomePageState extends State<HomePage> {
                   Row(
                     children: [
                       SizedBox(
-                        width: 10,
+                        width: 40,
                       ),
                       IconButton(
                         icon: new Image.asset("ASSETS/instagram.png"),
@@ -217,7 +220,7 @@ class _HomePageState extends State<HomePage> {
                 SizedBox(
                   width: 300,
                   child: Text(
-                    "Hello, $name ",
+                    "Hello, ${customer.nm} ",
                     style: TextStyle(
                         fontSize: 25,
                         color: Colors.black,
@@ -277,6 +280,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                             fit: BoxFit.cover),
                       ),
+
                       child: FlatButton(
                           padding: EdgeInsets.all(0.0),
                           child: Image(
@@ -294,11 +298,11 @@ class _HomePageState extends State<HomePage> {
                           onPressed: () {
                             setState(() {
                               isButtonPressed = !isButtonPressed;
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => SalonFirst("Salon", customer, favList)));
                             });
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => SalonFirst()));
+
                           }),
                     ),
 
@@ -336,8 +340,7 @@ class _HomePageState extends State<HomePage> {
                             });
                             Navigator.pushReplacement(
                                 context,
-                                MaterialPageRoute(
-                                    builder: (context) => RestorFirst()));
+                                MaterialPageRoute(builder: (context) => SalonFirst("Restraunt", customer, favList)));
                           }),
                     ),
                     SizedBox(
@@ -373,8 +376,7 @@ class _HomePageState extends State<HomePage> {
                             });
                             Navigator.pushReplacement(
                                 context,
-                                MaterialPageRoute(
-                                    builder: (context) => ClinicFirst()));
+                                MaterialPageRoute(builder: (context) => SalonFirst("Clinic", customer, favList)));
                           }),
                     ),
                   ],
@@ -445,8 +447,7 @@ class _HomePageState extends State<HomePage> {
                             });
                             Navigator.pushReplacement(
                                 context,
-                                MaterialPageRoute(
-                                    builder: (context) => DignoFirst()));
+                                MaterialPageRoute(builder: (context) => SalonFirst("Diagnostic Centre", customer, favList)));
                           }),
                     ),
                     SizedBox(
@@ -482,8 +483,7 @@ class _HomePageState extends State<HomePage> {
                             });
                             Navigator.pushReplacement(
                                 context,
-                                MaterialPageRoute(
-                                    builder: (context) => CentreFirst()));
+                                MaterialPageRoute(builder: (context) => SalonFirst("Service Centre", customer, favList)));
                           }),
                     ),
                     SizedBox(
@@ -517,6 +517,9 @@ class _HomePageState extends State<HomePage> {
                             setState(() {
                               isButtonPressed5 = !isButtonPressed5;
                             });
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(builder: (context) => SalonFirst("Gym", customer, favList)));
                           }),
                     ),
                   ],
@@ -538,6 +541,115 @@ class _HomePageState extends State<HomePage> {
                     ),
                     Text(
                       "Service\n Centre",
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    SizedBox(
+                      width: 80,
+                    ),
+                    Text(
+                      "Gyms",
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ],
+                ),
+
+
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  children: <Widget>[
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Container(
+                      height: 80,
+                      width: 80,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: AssetImage(
+                              'ASSETS/bank.png',
+                            ),
+                            fit: BoxFit.cover),
+                      ),
+                      child: FlatButton(
+                          padding: EdgeInsets.all(0.0),
+                          child: Image(
+                              image: AssetImage(
+                                'ASSETS/bank.png',
+                              ),
+                              fit: BoxFit.cover),
+                          color: isButtonPressed3 ? Colors.orange[800] : null,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0),
+                            side: BorderSide(
+                              color: Colors.black,
+                            ),
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              isButtonPressed3 = !isButtonPressed3;
+                            });
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(builder: (context) => SalonFirst("Bank", customer, favList)));
+                          }),
+                    ),
+                    SizedBox(
+                      width: 40,
+                    ),
+                    Container(
+                      height: 80,
+                      width: 80,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: AssetImage(
+                              'ASSETS/retail.png',
+                            ),
+                            fit: BoxFit.cover),
+                      ),
+                      child: FlatButton(
+                          padding: EdgeInsets.all(0.0),
+                          child: Image(
+                              image: AssetImage(
+                                'ASSETS/retail.png',
+                              ),
+                              fit: BoxFit.cover),
+                          color: isButtonPressed4 ? Colors.orange[800] : null,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0),
+                            side: BorderSide(
+                              color: Colors.black,
+                            ),
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              isButtonPressed4 = !isButtonPressed4;
+                            });
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(builder: (context) => SalonFirst("Retail", customer, favList)));
+                          }),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  children: [
+                    SizedBox(
+                      width: 30,
+                    ),
+                    Text(
+                      "Banks",
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    SizedBox(
+                      width: 50,
+                    ),
+                    Text(
+                      "Retails",
                       style: TextStyle(color: Colors.black),
                     ),
                     SizedBox(
@@ -627,5 +739,25 @@ class _HomePageState extends State<HomePage> {
       // An exception is thrown if browser app is not installed on Android device.
       debugPrint(e.toString());
     }
+  }
+
+  void getFav() async {
+    Firebase.initializeApp();
+    print("name = ${customer.nm}");
+    print("uid = ${customer.uid}");
+    print("cno = ${customer.cno}");
+
+    DataSnapshot ds = await FirebaseDatabase.instance.reference().child("customers/${customer.uid}/fav").once();
+    favList = ds.value;
+    print("favList = $favList");
+
+  }
+
+  void logout() async{
+    FirebaseAuth.instance.signOut();
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));
+    sharedPreferences.setBool("logged", false);
+
   }
 }

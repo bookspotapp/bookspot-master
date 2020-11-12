@@ -65,7 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
         customer.cno = preferences.getString("cno");
 
         Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => HomePage()));
+            MaterialPageRoute(builder: (context) => HomePage(customer)));
       }else{
 
         Navigator.pushReplacement(context,

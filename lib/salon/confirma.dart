@@ -1,3 +1,4 @@
+import 'package:bookspot/ContainerClass.dart';
 import 'package:bookspot/favorites.dart';
 import 'package:bookspot/privacy.dart';
 import 'package:bookspot/salon/Cancel.dart';
@@ -7,11 +8,20 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 class Confiramation extends StatefulWidget {
+  OrderDetails orderDetails;
+  Shop shop;
+  String cat;
+  Confiramation(this.cat, this.shop, this.orderDetails);
   @override
-  _ConfiramationState createState() => _ConfiramationState();
+  _ConfiramationState createState() => _ConfiramationState(cat, shop, orderDetails);
 }
 
 class _ConfiramationState extends State<Confiramation> {
+  OrderDetails orderDetails;
+  Shop shop;
+  String cat;
+  _ConfiramationState(this.cat, this.shop, this.orderDetails);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,142 +32,8 @@ class _ConfiramationState extends State<Confiramation> {
         backgroundColor: HexColor("#f9692d"),
         elevation: 0.0,
       ),
-      endDrawer: Container(
-        width: 230,
-        child: Drawer(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 30, right: 30),
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(
-                    right: 140,
-                  ),
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.clear,
-                    ),
-                    iconSize: 40,
-                    color: Colors.black,
-                    splashColor: Colors.purple,
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, "myRoute");
-                  },
-                  child: new Text(
-                    "Profile Settings",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, "myRoute");
-                  },
-                  child: new Text(
-                    "Upcoming Spot ",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => Favorites()));
-                  },
-                  child: new Text(
-                    "Favorites            ",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, "myRoute");
-                  },
-                  child: new Text(
-                    "History               ",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => PrivacyPo()));
-                  },
-                  child: new Text(
-                    "Privacy Policy   ",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => Setting()));
-                  },
-                  child: new Text(
-                    "Settings             ",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, "myRoute");
-                  },
-                  child: new Text(
-                    "Log Out             ",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
+
+
       body: Form(
         child: Stack(
           fit: StackFit.expand,
@@ -167,48 +43,43 @@ class _ConfiramationState extends State<Confiramation> {
               child: Center(
                 child: Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 300),
-                      child: IconButton(
-                        icon: Icon(
-                          Icons.arrow_back_ios,
+                    Row(
+                      children: [
+                        IconButton(
+                          icon: Icon(
+                            Icons.arrow_back_ios,
+                          ),
+                          iconSize: 30,
+                          color: Colors.black,
+                          splashColor: Colors.purple,
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
                         ),
-                        iconSize: 30,
-                        color: Colors.black,
-                        splashColor: Colors.purple,
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => DateTime()));
-                        },
-                      ),
+
+                        Text(
+                          "Confirmation",
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ],
                     ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 170),
-                      child: Text(
-                        "Confirmation",
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
+
                     SizedBox(
                       height: 10,
                     ),
                     Container(
-                      height: 150,
+                      height: 160,
                       decoration: BoxDecoration(
-                        border: Border.all(
-                            color: Colors.black, // set border color
-                            width: 2.0),
-                        borderRadius: BorderRadius.all(Radius.circular(
-                                10.0) //                 <--- border radius here
-                            ),
+
+                        image: DecorationImage(
+                          image: AssetImage(
+                            "ASSETS/ticket.png"
+                          ),
+                          fit: BoxFit.fill,
+                        )
                       ),
                       child: Column(
                         children: [
@@ -218,13 +89,15 @@ class _ConfiramationState extends State<Confiramation> {
                           Row(
                             children: [
                               SizedBox(
-                                width: 20,
+                                width: 80,
                               ),
-                              Text("Salon Name:"),
+                              Text("Salon Name      :", style: TextStyle(color: Colors.white, fontSize: 15.0)),
                               SizedBox(
-                                width: 130,
+                                width: 30,
                               ),
-                              Text("A B C D"),
+                              shop.name != null
+                                  ? Text(shop.name, style: TextStyle(color: Colors.white, fontSize: 15.0))
+                                  : Text(" "),
                             ],
                           ),
                           SizedBox(
@@ -233,13 +106,15 @@ class _ConfiramationState extends State<Confiramation> {
                           Row(
                             children: [
                               SizedBox(
-                                width: 20,
+                                width: 80,
                               ),
-                              Text("Date:"),
+                              Text("Date                   :", style: TextStyle(color: Colors.white, fontSize: 15.0)),
                               SizedBox(
-                                width: 150,
+                                width: 30,
                               ),
-                              Text("02/ 09/ 20"),
+                              orderDetails.bDate != null
+                                  ? Text(orderDetails.bDate.split(" ")[0], style: TextStyle(color: Colors.white, fontSize: 15.0))
+                                  : Text(" "),
                             ],
                           ),
                           SizedBox(
@@ -248,19 +123,19 @@ class _ConfiramationState extends State<Confiramation> {
                           Row(
                             children: [
                               SizedBox(
-                                width: 20,
+                                width: 80,
                               ),
-                              Text("Timings:"),
+                              Text("Timings             :", style: TextStyle(color: Colors.white, fontSize: 15.0)),
                               SizedBox(
-                                width: 150,
+                                width: 30,
                               ),
-                              Text("09 : 00 AM"),
+                              Text(orderDetails.bTime, style: TextStyle(color: Colors.white, fontSize: 15.0)),
                             ],
                           ),
                         ],
                       ),
                     ),
-                    SizedBox(
+                   /* SizedBox(
                       height: 10,
                     ),
                     Row(
@@ -275,13 +150,15 @@ class _ConfiramationState extends State<Confiramation> {
                         Text("00 : 02 :59")
                       ],
                     ),
+
+                    */
                     SizedBox(
                       height: 200,
                     ),
                     MaterialButton(
                       height: 52,
                       minWidth: 323,
-                      color: Colors.blue[900],
+                      color: HexColor("#f9692d"),
                       textColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(24.0),
@@ -292,7 +169,7 @@ class _ConfiramationState extends State<Confiramation> {
                       ),
                       onPressed: () {
                         Navigator.pushReplacement(context,
-                            MaterialPageRoute(builder: (context) => Canclee()));
+                            MaterialPageRoute(builder: (context) => Canclee(cat, shop, orderDetails)));
                       },
                       splashColor: Colors.redAccent,
                     ),

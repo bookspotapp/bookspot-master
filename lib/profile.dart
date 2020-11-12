@@ -5,17 +5,28 @@ import 'package:bookspot/history.dart';
 import 'package:bookspot/privacy.dart';
 import 'package:bookspot/settings.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:image_picker/image_picker.dart';
 
+import 'ContainerClass.dart';
+import 'homepage.dart';
+
 class ProfileSetting extends StatefulWidget {
+  Customer customer;
+
+  ProfileSetting(this.customer);
+
   @override
-  _ProfileSettingState createState() => _ProfileSettingState();
+  _ProfileSettingState createState() => _ProfileSettingState(customer);
 }
 
 class _ProfileSettingState extends State<ProfileSetting> {
   File _image;
-  String _name, _phone, _email;
+  Customer customer;
+  TextEditingController nameController = new TextEditingController(), cnoController = new TextEditingController(), emailController = new TextEditingController();
+
+  _ProfileSettingState(this.customer);
 
   Future getImage() async {
     final image = await ImagePicker.pickImage(source: ImageSource.gallery);
@@ -25,167 +36,29 @@ class _ProfileSettingState extends State<ProfileSetting> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    nameController.text = customer.nm;
+    if(customer.email != null || customer.email != null)
+      emailController.text = customer.email;
+    cnoController.text = customer.cno;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+
         leading: Image(
-          image: AssetImage("ASSETS/logo.png"),
-        ),
+              image: AssetImage("ASSETS/logo.png"),
+            ),
+
         backgroundColor: HexColor("#f9692d"),
         elevation: 0.0,
       ),
-      endDrawer: Container(
-        width: 230,
-        child: Drawer(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 30, right: 30),
-            child: SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  SizedBox(
-                    height: 20,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ProfileSetting()));
-                    },
-                    child: new Text(
-                      "Profile Settings",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(context, "myRoute");
-                    },
-                    child: new Text(
-                      "Upcoming Spot ",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context) => Favorites()));
-                    },
-                    child: new Text(
-                      "Favorites            ",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context) => History()));
-                    },
-                    child: new Text(
-                      "History               ",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context) => PrivacyPo()));
-                    },
-                    child: new Text(
-                      "Privacy Policy   ",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context) => Setting()));
-                    },
-                    child: new Text(
-                      "Settings             ",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(context, "myRoute");
-                    },
-                    child: new Text(
-                      "Log Out             ",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 240,
-                  ),
-                  Text(
-                    "Follow                     ",
-                    style: TextStyle(
-                        color: Colors.orange,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 10,
-                      ),
-                      IconButton(
-                          icon: new Image.asset("ASSETS/instagram.png"),
-                          onPressed: null),
-                      IconButton(
-                          icon: new Image.asset("ASSETS/facebook.png"),
-                          onPressed: null),
-                      IconButton(
-                          icon: new Image.asset("ASSETS/twitter.png"),
-                          onPressed: null)
-                    ],
-                  )
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
+
+
       body: Form(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -196,11 +69,31 @@ class _ProfileSettingState extends State<ProfileSetting> {
                 child: Center(
                   child: Column(
                     children: <Widget>[
-                      Text(
-                        "Profile Settings",
-                        style: TextStyle(
-                            fontSize: 25, fontWeight: FontWeight.bold),
+
+                      Row(
+                        children: [
+                          IconButton(
+                            icon: Icon(
+                              Icons.arrow_back_ios,
+                            ),
+                            iconSize: 30,
+                            color: Colors.black,
+                            splashColor: Colors.purple,
+                            onPressed: () {
+                              Navigator.pushReplacement(context, MaterialPageRoute(
+                                  builder: (context) => HomePage(customer)
+                              ));
+                            },
+                          ),
+                          Text(
+                            "Profile Settings",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 25, fontWeight: FontWeight.bold),
+                          ),
+                        ],
                       ),
+
                       SizedBox(
                         height: 20,
                       ),
@@ -216,15 +109,17 @@ class _ProfileSettingState extends State<ProfileSetting> {
                                     shape: BoxShape.circle,
                                     image: DecorationImage(
                                         image: FileImage(_image),
-                                        fit: BoxFit.fill),
+                                        fit: BoxFit.cover),
                                   ),
                                 )
                               : GestureDetector(
                                   onTap: () {
                                     getImage();
                                   },
-                                  child: Image.network(
-                                    'https://www.materialui.co/materialIcons/image/add_a_photo_black_36x36.png',
+                                  child: Image.asset(
+                                    'ASSETS/camera.png',
+                                    width: 40,
+                                    height: 40,
                                     fit: BoxFit.fill,
                                   ),
                                 ),
@@ -257,10 +152,10 @@ class _ProfileSettingState extends State<ProfileSetting> {
                             ),
                           ),
                         ),
+
+                        controller: nameController,
+
                         keyboardType: TextInputType.text,
-                        onSaved: (String val) {
-                          _name = val;
-                        },
                       ),
                       SizedBox(
                         height: 20,
@@ -282,11 +177,18 @@ class _ProfileSettingState extends State<ProfileSetting> {
                             ),
                           ),
                         ),
-                        keyboardType: TextInputType.text,
-                        onSaved: (String val) {
-                          _email = val;
-                        },
+                        keyboardType: TextInputType.emailAddress,
+                        controller: emailController,
+                          autovalidate: true,
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Enter valid Email address';
+                            }
+                            return null;
+                          }
                       ),
+
+
                       SizedBox(
                         height: 20,
                       ),
@@ -307,11 +209,15 @@ class _ProfileSettingState extends State<ProfileSetting> {
                             ),
                           ),
                         ),
-                        obscureText: true,
-                        keyboardType: TextInputType.text,
-                        onSaved: (String val) {
-                          _phone = val;
-                        },
+                        keyboardType: TextInputType.phone,
+                        controller: cnoController,
+                          autovalidate: true,
+                          validator: (value) {
+                            if (value.isEmpty || value.length != 10) {
+                              return 'Enter valid Phone No.';
+                            }
+                            return null;
+                          }
                       ),
                       SizedBox(
                         height: 80,
@@ -319,20 +225,27 @@ class _ProfileSettingState extends State<ProfileSetting> {
                       MaterialButton(
                         height: 52,
                         minWidth: 323,
-                        color: Colors.blue[900],
+                        color: HexColor("#f9692d"),
                         textColor: Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(24.0),
                         ),
                         child: Text(
-                          "Sign up",
+                          "Save Details",
                           style: TextStyle(color: Colors.white, fontSize: 20.0),
                         ),
                         onPressed: () {
-                          // Navigator.pushReplacement(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) => LoginPage()));
+                          if(nameController.text.trim().isNotEmpty && cnoController.text.trim().isNotEmpty && emailController.text.trim().isNotEmpty ) {
+
+                            Fluttertoast.showToast(msg: "Details Saved!",
+                                textColor: Colors.white,
+                                timeInSecForIosWeb: 2,
+                                gravity: ToastGravity.BOTTOM);
+
+                            Navigator.pushReplacement(
+                                context, MaterialPageRoute(
+                                builder: (context) => HomePage(customer)));
+                          }
                         },
                         splashColor: Colors.redAccent,
                       ),

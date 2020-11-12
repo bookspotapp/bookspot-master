@@ -82,10 +82,13 @@ flutter:
     - ASSETS/Artboard 1 copy 18ldpi.png
     - ASSETS/Artboard 1 copy 23ldpi.png
     - ASSETS/ticket.png
+    - ASSETS/retail.png
+    - ASSETS/bank.png
     - ASSETS/logoo.jpg
     - ASSETS/instagram.png
     - ASSETS/facebook.png
     - ASSETS/twitter.png
+    - ASSETS/camera.png
    
 
   # An image asset can refer to one or more resolution-specific "variants", see

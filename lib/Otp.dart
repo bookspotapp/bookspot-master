@@ -19,6 +19,7 @@ class _OTpScState extends State<OTpSc> {
   TextEditingController otpController = new TextEditingController();
   String verId = "";
   String uid = "";
+  FirebaseAuth _auth;
 
   @override
   void initState()  {
@@ -99,7 +100,7 @@ class _OTpScState extends State<OTpSc> {
                           style: TextStyle(color: Colors.white, fontSize: 20.0),
                         ),
                         onPressed: () {
-
+                          _signInWithPhoneNumber(otpController.text.trim());
                         },
                         splashColor: Colors.redAccent,
                       ),
@@ -115,7 +116,7 @@ class _OTpScState extends State<OTpSc> {
   void sendOTP() async {
     await Firebase.initializeApp();
 
-    FirebaseAuth _auth = FirebaseAuth.instance;
+    _auth = FirebaseAuth.instance;
     SharedPreferences preferences = await SharedPreferences.getInstance() ;
 
     _auth.verifyPhoneNumber(
@@ -124,36 +125,46 @@ class _OTpScState extends State<OTpSc> {
         timeout: Duration(seconds: 60),
 
 
-        verificationCompleted: (PhoneAuthCredential authCredential){
+        verificationCompleted: (PhoneAuthCredential authCredential)  {
           _auth.signInWithCredential(authCredential);
 
-          Fluttertoast.showToast(msg: "Login Successfull!",
-              backgroundColor: HexColor("#f9692d"),
-              textColor: Colors.white,
-              timeInSecForIosWeb: 2,
-              gravity: ToastGravity.BOTTOM);
+          if(_auth.currentUser != null){
+              preferences.setBool("logged", true);
+              preferences.setString("cno", number);
+              preferences.setString("uid", _auth.currentUser.uid);
+              preferences.setString("name", name);
 
+              customer.cno = number;
+              customer.uid = _auth.currentUser.uid;
+              customer.nm = name;
 
-          preferences.setBool("logged", true);
+              uid = _auth.currentUser.uid;
 
-          customer.cno = number;
-          customer.uid = _auth.currentUser.uid;
-          customer.nm = name;
+              DatabaseReference ref =  FirebaseDatabase.instance.reference().child("customers");
+              ref.child(customer.uid).set(<String, Object>{
+                "nm" : customer.nm,
+                "uid" : uid,
+                "cno" : customer.cno
+              });
 
-          uid = _auth.currentUser.uid;
+              print("name = ${customer.nm}");
+              print("uid = ${customer.uid}");
+              print("cno = ${customer.cno}");
 
-          DatabaseReference ref = FirebaseDatabase.instance.reference().child("customers");
-          ref.child(customer.uid).set(<String, Object>{
-            "nm" : customer.nm,
-            "uid" : uid,
-            "cno" : customer.cno
-          });
+              Navigator.pushReplacement(context, MaterialPageRoute(
+                  builder: (context) => HomePage(customer)
+              ));
 
-          Navigator.pushReplacement(context, MaterialPageRoute(
-              builder: (context) => HomePage()
-          ));
+              Fluttertoast.showToast(msg: "Login Successfull!",
+                  backgroundColor: HexColor("#f9692d"),
+                  textColor: Colors.white,
+                  timeInSecForIosWeb: 2,
+                  gravity: ToastGravity.BOTTOM);
 
-        }, //Verification Completed
+            }
+          else
+            print("curruser = null");
+          }, //Verification Completed
 
         verificationFailed: (FirebaseAuthException authException){
           Fluttertoast.showToast(msg: authException.message,
@@ -164,9 +175,7 @@ class _OTpScState extends State<OTpSc> {
         },// Verification Failed
 
         codeSent: (String verificationId, [int forceResendingToken]){
-
           verId = verificationId;
-          print(verificationId);
         },// Verification Code Sent
 
         codeAutoRetrievalTimeout: (String verificationId){
@@ -210,10 +219,59 @@ class _OTpScState extends State<OTpSc> {
       });
 
       Navigator.pushReplacement(context, MaterialPageRoute(
-          builder: (context) => HomePage()
+          builder: (context) => HomePage(customer)
       ));
 
     }
+  }
+
+
+
+  void _signInWithPhoneNumber(String smsCode) async {
+    AuthCredential _authCredential = await PhoneAuthProvider.getCredential(
+        verificationId: verId, smsCode: smsCode);
+
+    SharedPreferences preferences = await SharedPreferences.getInstance() ;
+    _auth.signInWithCredential(_authCredential);
+
+      if(_auth.currentUser != null){
+        preferences.setBool("logged", true);
+        preferences.setString("cno", number);
+        preferences.setString("uid", _auth.currentUser.uid);
+        preferences.setString("name", name);
+
+        customer.cno = number;
+        customer.uid = _auth.currentUser.uid;
+        customer.nm = name;
+
+        uid = _auth.currentUser.uid;
+
+        DatabaseReference ref =  FirebaseDatabase.instance.reference().child("customers");
+        ref.child(customer.uid).set(<String, Object>{
+          "nm" : customer.nm,
+          "uid" : uid,
+          "cno" : customer.cno
+        });
+
+        print("name = ${customer.nm}");
+        print("uid = ${customer.uid}");
+        print("cno = ${customer.cno}");
+
+        Navigator.pushReplacement(context, MaterialPageRoute(
+            builder: (context) => HomePage(customer)
+        ));
+
+        Fluttertoast.showToast(msg: "Login Successfull!",
+            backgroundColor: HexColor("#f9692d"),
+            textColor: Colors.white,
+            timeInSecForIosWeb: 2,
+            gravity: ToastGravity.BOTTOM);
+
+      }
+      else
+        print("curruser = null");
+
+
   }
 
 }//_OTpScState

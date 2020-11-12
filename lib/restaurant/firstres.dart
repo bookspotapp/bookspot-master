@@ -7,12 +7,15 @@ import 'package:bookspot/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 
+import '../ContainerClass.dart';
+
 class RestorFirst extends StatefulWidget {
   @override
   _RestorFirstState createState() => _RestorFirstState();
 }
 
 class _RestorFirstState extends State<RestorFirst> {
+  Customer customer;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,142 +26,7 @@ class _RestorFirstState extends State<RestorFirst> {
         backgroundColor: HexColor("#f9692d"),
         elevation: 0.0,
       ),
-      endDrawer: Container(
-        width: 230,
-        child: Drawer(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 30, right: 30),
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(
-                    right: 140,
-                  ),
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.clear,
-                    ),
-                    iconSize: 40,
-                    color: Colors.black,
-                    splashColor: Colors.purple,
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, "myRoute");
-                  },
-                  child: new Text(
-                    "Profile Settings",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, "myRoute");
-                  },
-                  child: new Text(
-                    "Upcoming Spot ",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => Favorites()));
-                  },
-                  child: new Text(
-                    "Favorites            ",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, "myRoute");
-                  },
-                  child: new Text(
-                    "History               ",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => PrivacyPo()));
-                  },
-                  child: new Text(
-                    "Privacy Policy   ",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => Setting()));
-                  },
-                  child: new Text(
-                    "Settings             ",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, "myRoute");
-                  },
-                  child: new Text(
-                    "Log Out             ",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
+
       body: Form(
         child: Stack(
           fit: StackFit.expand,
@@ -182,7 +50,7 @@ class _RestorFirstState extends State<RestorFirst> {
                             Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => HomePage()));
+                                    builder: (context) => HomePage(customer)));
                           },
                         ),
                       ),

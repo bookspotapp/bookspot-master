@@ -1,4 +1,5 @@
 import 'package:bookspot/favorites.dart';
+import 'package:bookspot/main.dart';
 import 'package:bookspot/privacy.dart';
 import 'package:bookspot/profile.dart';
 import 'package:bookspot/settings.dart';
@@ -7,22 +8,16 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 
-import 'ContainerClass.dart';
-import 'homepage.dart';
+import '../ContainerClass.dart';
+import '../homepage.dart';
 
-class History extends StatefulWidget {
-  Customer customer;
-
-  History(this.customer);
+class Upcoming extends StatefulWidget {
 
   @override
-  _HistoryState createState() => _HistoryState(customer);
+  _UpcomingState createState() => _UpcomingState();
 }
 
-class _HistoryState extends State<History> {
-  Customer customer;
-
-  _HistoryState(this.customer);
+class _UpcomingState extends State<Upcoming> {
   @override
   void initState() {
     // TODO: implement initState
@@ -32,7 +27,6 @@ class _HistoryState extends State<History> {
   void setup() async  {
     await Firebase.initializeApp();
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,6 +37,7 @@ class _HistoryState extends State<History> {
         backgroundColor: HexColor("#f9692d"),
         elevation: 0.0,
       ),
+
 
       body: Form(
           child: Stack(
@@ -72,7 +67,7 @@ class _HistoryState extends State<History> {
                           ),
 
                           Text(
-                            "History",
+                            "Upcoming",
                             style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 25,
@@ -82,7 +77,7 @@ class _HistoryState extends State<History> {
                       ),
 
                       FutureBuilder(
-                        future: FirebaseDatabase.instance.reference().child("customers/${customer.uid}/services").orderByChild("st").startAt(3).once(),
+                        future: FirebaseDatabase.instance.reference().child("customers/${customer.uid}/services").orderByChild("st").endAt(3).once(),
                         builder: (context, data){
                           if(data.hasData){
                             DataSnapshot ds = data.data;
@@ -220,9 +215,9 @@ class _HistoryState extends State<History> {
                                             mainAxisAlignment: MainAxisAlignment
                                                 .center,
                                             children: [
-                                              if (order.st == 3) Text(
-                                                  "Declined") else
-                                                Text("Completed")
+                                              if (order.st == 1) Text(
+                                                  "Pending") else
+                                                Text("Accepted")
                                             ],
                                           )
                                         ],
@@ -244,5 +239,4 @@ class _HistoryState extends State<History> {
           )),
     );
   }
-
 }

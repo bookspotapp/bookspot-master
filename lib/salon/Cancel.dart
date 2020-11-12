@@ -1,18 +1,44 @@
+import 'dart:async';
+
+import 'package:bookspot/ContainerClass.dart';
 import 'package:bookspot/favorites.dart';
 import 'package:bookspot/history.dart';
+import 'package:bookspot/main.dart';
 import 'package:bookspot/privacy.dart';
 import 'package:bookspot/profile.dart';
 import 'package:bookspot/salon/confirma.dart';
+import 'package:bookspot/salon/upcoming.dart';
 import 'package:bookspot/settings.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hexcolor/hexcolor.dart';
 
+import '../homepage.dart';
+
 class Canclee extends StatefulWidget {
+  OrderDetails orderDetails;
+  Shop shop;
+  String cat;
+  Canclee(this.cat, this.shop, this.orderDetails);
   @override
-  _CancleeState createState() => _CancleeState();
+  _CancleeState createState() => _CancleeState(cat, shop, orderDetails);
 }
 
 class _CancleeState extends State<Canclee> {
+  OrderDetails orderDetails;
+  Shop shop;
+  String cat;
+
+  _CancleeState(this.cat, this.shop, this.orderDetails);
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    getDataFromDatabase();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,159 +49,10 @@ class _CancleeState extends State<Canclee> {
         backgroundColor: HexColor("#f9692d"),
         elevation: 0.0,
       ),
-      endDrawer: Container(
-        width: 230,
-        child: Drawer(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 30, right: 30),
-            child: SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  SizedBox(
-                    height: 20,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ProfileSetting()));
-                    },
-                    child: new Text(
-                      "Profile Settings",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(context, "myRoute");
-                    },
-                    child: new Text(
-                      "Upcoming Spot ",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context) => Favorites()));
-                    },
-                    child: new Text(
-                      "Favorites            ",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context) => History()));
-                    },
-                    child: new Text(
-                      "History               ",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context) => PrivacyPo()));
-                    },
-                    child: new Text(
-                      "Privacy Policy   ",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context) => Setting()));
-                    },
-                    child: new Text(
-                      "Settings             ",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(context, "myRoute");
-                    },
-                    child: new Text(
-                      "Log Out             ",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 240,
-                  ),
-                  Text(
-                    "Follow                     ",
-                    style: TextStyle(
-                        color: Colors.orange,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 10,
-                      ),
-                      IconButton(
-                          icon: new Image.asset("ASSETS/instagram.png"),
-                          onPressed: null),
-                      IconButton(
-                          icon: new Image.asset("ASSETS/facebook.png"),
-                          onPressed: null),
-                      IconButton(
-                          icon: new Image.asset("ASSETS/twitter.png"),
-                          onPressed: null)
-                    ],
-                  )
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-      body: Form(
+
+
+      body: orderDetails.tkn != null
+      ? Form(
         child: Stack(
           fit: StackFit.expand,
           children: <Widget>[
@@ -194,25 +71,35 @@ class _CancleeState extends State<Canclee> {
                         color: Colors.black,
                         splashColor: Colors.purple,
                         onPressed: () {
+                          Customer customer = new Customer();
+                          customer.uid = orderDetails.uid;
+                          customer.nm = orderDetails.nm;
+                          customer.cno = orderDetails.cno;
                           Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => Confiramation()));
+                                  builder: (context) => HomePage(customer)));
                         },
                       ),
                     ),
+
+
                     SizedBox(
                       height: 20,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 170),
-                      child: Text(
-                        "Hello, A b c d",
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold),
-                      ),
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Text(
+                          "Hello, ${orderDetails.nm}",
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ],
                     ),
                     SizedBox(
                       height: 10,
@@ -220,13 +107,19 @@ class _CancleeState extends State<Canclee> {
                     Container(
                       height: 150,
                       decoration: BoxDecoration(
-                        color: HexColor("#f9692d"),
                         border: Border.all(
                             color: Colors.black, // set border color
                             width: 2.0),
                         borderRadius: BorderRadius.all(Radius.circular(
                                 10.0) //                 <--- border radius here
                             ),
+
+                          image: DecorationImage(
+                            image: AssetImage(
+                                "ASSETS/ticket.png"
+                            ),
+                            fit: BoxFit.fill,
+                          )
                       ),
                       child: Column(
                         children: [
@@ -236,19 +129,21 @@ class _CancleeState extends State<Canclee> {
                           Row(
                             children: [
                               SizedBox(
-                                width: 20,
+                                width: 80,
                               ),
                               Text(
-                                "Token No:",
+                                "Token No        :",
                                 style: TextStyle(color: Colors.white),
                               ),
                               SizedBox(
-                                width: 130,
+                                width: 30,
                               ),
-                              Text(
-                                "53",
+                              orderDetails.tkn != null
+                              ? Text(
+                                "${orderDetails.tkn}",
                                 style: TextStyle(color: Colors.white),
-                              ),
+                              )
+                              : Text(" "),
                             ],
                           ),
                           SizedBox(
@@ -257,14 +152,14 @@ class _CancleeState extends State<Canclee> {
                           Row(
                             children: [
                               SizedBox(
-                                width: 20,
+                                width: 80,
                               ),
                               Text(
-                                "Date:",
+                                "Date                 :",
                                 style: TextStyle(color: Colors.white),
                               ),
                               SizedBox(
-                                width: 150,
+                                width: 30,
                               ),
                               Text(
                                 "22 / 09 / 20",
@@ -278,14 +173,14 @@ class _CancleeState extends State<Canclee> {
                           Row(
                             children: [
                               SizedBox(
-                                width: 20,
+                                width: 80,
                               ),
                               Text(
-                                "Time:",
+                                "Time                :",
                                 style: TextStyle(color: Colors.white),
                               ),
                               SizedBox(
-                                width: 150,
+                                width: 30,
                               ),
                               Text(
                                 "09 : 00 AM",
@@ -307,13 +202,13 @@ class _CancleeState extends State<Canclee> {
                               width: 30,
                             ),
                             Text(
-                              "Your Place:",
+                              "Your Place   :",
                             ),
                             SizedBox(
-                              width: 150,
+                              width: 50,
                             ),
                             Text(
-                              "W X Y Z",
+                              "",
                             ),
                           ],
                         ),
@@ -326,20 +221,20 @@ class _CancleeState extends State<Canclee> {
                               width: 30,
                             ),
                             Text(
-                              "Service Type:",
+                              "Service Type :",
                             ),
                             SizedBox(
-                              width: 130,
+                              width: 50,
                             ),
                             Text(
-                              "Manicure",
+                              "${orderDetails.Stype}",
                             ),
                           ],
                         ),
                         SizedBox(
                           height: 10,
                         ),
-                        Row(
+                       /* Row(
                           children: [
                             SizedBox(
                               width: 30,
@@ -355,15 +250,19 @@ class _CancleeState extends State<Canclee> {
                             ),
                           ],
                         ),
+
+                        */
                       ],
                     ),
+
                     SizedBox(
-                      height: 120,
+                      height: 130,
                     ),
+
                     MaterialButton(
                       height: 52,
                       minWidth: 323,
-                      color: Colors.blue[900],
+                      color: Colors.red,
                       textColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(24.0),
@@ -373,18 +272,40 @@ class _CancleeState extends State<Canclee> {
                         style: TextStyle(color: Colors.white, fontSize: 20.0),
                       ),
                       onPressed: () {
+                        Customer customer = new Customer();
+                        customer.uid = orderDetails.uid;
+                        customer.nm = orderDetails.nm;
+                        customer.cno = orderDetails.cno;
                         Navigator.pushReplacement(context,
-                            MaterialPageRoute(builder: (context) => Canclee()));
+                            MaterialPageRoute(builder: (context) => HomePage(customer)));
                       },
-                      splashColor: Colors.redAccent,
-                    ),
+                      splashColor: Colors.yellowAccent,
+                    )
                   ],
                 ),
               ),
             ),
           ],
         ),
-      ),
+      )
+
+      : Center(child : CircularProgressIndicator(valueColor: new  AlwaysStoppedAnimation<Color>(HexColor("#f9692d")),)),
     );
   }
+
+  void getDataFromDatabase() async {
+    if(orderDetails.tkn == null) {
+      DataSnapshot ds = await FirebaseDatabase.instance.reference().child(
+          "orders/${shop.uid}/tkn").once();
+      orderDetails.tkn = ds.value + 1;
+      String req = orderDetails.toString();
+      print("req = $req");
+      DatabaseReference reqRef = FirebaseDatabase.instance.reference().child("vendors/${shop.uid}");
+      reqRef.child("req").set(req).then((value) => {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Upcoming()))
+      });
+    }
+  }
+
+
 }

@@ -1,5 +1,6 @@
 import 'package:bookspot/favorites.dart';
 import 'package:bookspot/history.dart';
+import 'package:bookspot/main.dart';
 import 'package:bookspot/profile.dart';
 import 'package:bookspot/settings.dart';
 import 'package:flutter/material.dart';
@@ -34,10 +35,12 @@ class _PrivacyPoState extends State<PrivacyPo> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushReplacement(
+                      /*Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                               builder: (context) => ProfileSetting()));
+
+                       */
                     },
                     child: new Text(
                       "Profile Settings",
@@ -67,8 +70,10 @@ class _PrivacyPoState extends State<PrivacyPo> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushReplacement(context,
+                     /* Navigator.pushReplacement(context,
                           MaterialPageRoute(builder: (context) => Favorites()));
+
+                      */
                     },
                     child: new Text(
                       "Favorites            ",
@@ -84,7 +89,7 @@ class _PrivacyPoState extends State<PrivacyPo> {
                   GestureDetector(
                     onTap: () {
                       Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context) => History()));
+                          MaterialPageRoute(builder: (context) => History(customer)));
                     },
                     child: new Text(
                       "History               ",

@@ -1,20 +1,43 @@
-import 'package:bookspot/favorites.dart';
-import 'package:bookspot/privacy.dart';
 import 'package:bookspot/salon/Date.dart';
 import 'package:bookspot/salon/first.dart';
-import 'package:bookspot/settings.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:lite_rolling_switch/lite_rolling_switch.dart';
+import '../ContainerClass.dart';
 
 class Services extends StatefulWidget {
+  Customer customer;
+  Shop shop;
+  String fav, cat;
+  Vendor vendor;
+
+  Services(this.cat, this.customer, this.shop, this.fav, this.vendor);
+
   @override
-  _ServicesState createState() => _ServicesState();
+  _ServicesState createState() => _ServicesState(cat, customer, shop, fav, vendor);
 }
 
 class _ServicesState extends State<Services> {
-  int _value = 1;
   int _itemCount = 0;
+  Customer customer;
+  Vendor vendor;
+  Shop shop;
+  String fav, cat;
+  String sService = "Select Service";
+  bool anyCompany = false;
+  List<String> servicesList;
+
+  _ServicesState(this.cat, this.customer, this.shop, this.fav, this.vendor);
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    getDataFromDataBase();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,143 +48,10 @@ class _ServicesState extends State<Services> {
         backgroundColor: HexColor("#f9692d"),
         elevation: 0.0,
       ),
-      endDrawer: Container(
-        width: 230,
-        child: Drawer(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 30, right: 30),
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(
-                    right: 140,
-                  ),
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.clear,
-                    ),
-                    iconSize: 40,
-                    color: Colors.black,
-                    splashColor: Colors.purple,
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, "myRoute");
-                  },
-                  child: new Text(
-                    "Profile Settings",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, "myRoute");
-                  },
-                  child: new Text(
-                    "Upcoming Spot ",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => Favorites()));
-                  },
-                  child: new Text(
-                    "Favorites            ",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, "myRoute");
-                  },
-                  child: new Text(
-                    "History               ",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => PrivacyPo()));
-                  },
-                  child: new Text(
-                    "Privacy Policy   ",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => Setting()));
-                  },
-                  child: new Text(
-                    "Settings             ",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, "myRoute");
-                  },
-                  child: new Text(
-                    "Log Out             ",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-      body: Form(
+
+
+      body: servicesList != null
+      ? Form(
         child: Stack(
           fit: StackFit.expand,
           children: <Widget>[
@@ -183,7 +73,7 @@ class _ServicesState extends State<Services> {
                           Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => SalonFirst()));
+                                  builder: (context) => SalonFirst(cat, customer, fav)));
                         },
                       ),
                     ),
@@ -224,7 +114,9 @@ class _ServicesState extends State<Services> {
                               SizedBox(
                                 width: 130,
                               ),
-                              Text("A B C D"),
+                              vendor != null
+                              ? Text(vendor.fname)
+                              : Text(""),
                             ],
                           ),
                           SizedBox(
@@ -239,7 +131,9 @@ class _ServicesState extends State<Services> {
                               SizedBox(
                                 width: 150,
                               ),
-                              Text("1 2 3 4 5"),
+                              vendor != null
+                                  ? Text(vendor.add)
+                                  : Text(""),
                             ],
                           ),
                           SizedBox(
@@ -254,7 +148,9 @@ class _ServicesState extends State<Services> {
                               SizedBox(
                                 width: 150,
                               ),
-                              Text("09 : 00 AM"),
+                              vendor != null
+                                  ? Text(vendor.stime)
+                                  : Text(""),
                             ],
                           ),
                         ],
@@ -271,25 +167,24 @@ class _ServicesState extends State<Services> {
                             border: Border.all()),
                         child: Center(
                           child: DropdownButtonHideUnderline(
-                            child: DropdownButton(
-                                value: _value,
-                                items: [
-                                  DropdownMenuItem(
-                                    child: Text("Choose Services"),
-                                    value: 1,
-                                  ),
-                                  DropdownMenuItem(
-                                    child: Text("Second Item"),
-                                    value: 2,
-                                  ),
-                                  DropdownMenuItem(
-                                      child: Text("Third Item"), value: 3),
-                                  DropdownMenuItem(
-                                      child: Text("Fourth Item"), value: 4)
-                                ],
+                            child: DropdownButton<String>(
+                                value : sService,
+
+                                items: servicesList != null
+                                ? servicesList.map<DropdownMenuItem<String>>((String value){
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: new Text(value),
+                                  );
+                                }).toList()
+                                : [ DropdownMenuItem<String>(
+                                  value: "aman",
+                                  child: new Text("askandha"),
+                                )],
+
                                 onChanged: (value) {
                                   setState(() {
-                                    _value = value;
+                                    sService = value;
                                   });
                                 }),
                           ),
@@ -335,15 +230,16 @@ class _ServicesState extends State<Services> {
                       width: 130,
                       child: LiteRollingSwitch(
                         //initial value
-                        value: true,
-                        textOn: 'No',
-                        textOff: 'Yes',
-                        colorOn: Colors.black,
-                        colorOff: Colors.orange[800],
-                        iconOn: Icons.remove_circle_outline,
-                        iconOff: Icons.done,
+                        value: false,
+                        textOn: 'Yes',
+                        textOff: 'No',
+                        colorOff: Colors.black,
+                        colorOn: Colors.orange[800],
+                        iconOff: Icons.remove_circle_outline,
+                        iconOn: Icons.done,
                         textSize: 20.5,
                         onChanged: (bool state) {
+                          anyCompany = state;
                           print('Current State of SWITCH IS: $state');
                         },
                       ),
@@ -354,7 +250,7 @@ class _ServicesState extends State<Services> {
                     MaterialButton(
                       height: 52,
                       minWidth: 323,
-                      color: Colors.blue[900],
+                      color: HexColor("#f9692d"),
                       textColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(24.0),
@@ -364,10 +260,26 @@ class _ServicesState extends State<Services> {
                         style: TextStyle(color: Colors.white, fontSize: 20.0),
                       ),
                       onPressed: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => DateTime()));
+
+                        if(sService.compareTo("Select Service") != 0 && sService.compareTo("") != 0) {
+                          print(
+                              "Service selected = $sService \nitemcount = $_itemCount \nanyCompany = $anyCompany");
+
+                          OrderDetails orderDetails = new OrderDetails(customer.uid, customer.cno, sService, customer.nm, anyCompany, _itemCount);
+
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      Datetime(cat, customer, shop, orderDetails)));
+
+                        }else{
+                          Fluttertoast.showToast(
+                            msg: "Please select Service",
+                            backgroundColor: Colors.red,
+                            textColor: Colors.white,
+                          );
+                        }
                       },
                       splashColor: Colors.redAccent,
                     ),
@@ -377,7 +289,45 @@ class _ServicesState extends State<Services> {
             )
           ],
         ),
-      ),
+      )
+
+      : Center(child : CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(HexColor("#f9692d")),)),
     );
+  }
+
+  void getDataFromDataBase() async {
+    if(vendor == null) {
+      DataSnapshot ds = await FirebaseDatabase.instance.reference().child(
+          "vendors/${shop.uid}").once();
+      Map<String, dynamic> item = new Map<String, dynamic>.from(ds.value);
+
+      vendor = new Vendor(
+          item["cno"],
+          item["fname"],
+          item["oname"],
+          item["add"],
+          item["email"],
+          item["website"],
+          item["addno"],
+          item["cat"],
+          item["services"],
+          item["total_tokens"],
+          item["sdate"],
+          item["stime"],
+          item["UID"],
+          item["rat"],
+          item["ltiming"],
+          item["lat"],
+          item["lng"]);
+
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Services(cat, customer, shop, fav, vendor)));
+    }else{
+      servicesList =  vendor.services.split(";");
+      int l = servicesList.length;
+      servicesList.removeAt(l-1);
+      servicesList.add("Select Service");
+      print("servicesList = $servicesList");
+    }
+
   }
 }
