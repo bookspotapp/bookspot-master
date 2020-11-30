@@ -4,7 +4,9 @@ import 'package:bookspot/firstpage.dart';
 import 'package:bookspot/loginpage.dart';
 import 'package:bookspot/splash.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'ContainerClass.dart';
@@ -36,6 +38,8 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+    final fbm = FirebaseMessaging();
+    fbm.requestNotificationPermissions();
     Timer(
         Duration(seconds: 2),
         forwardTo);
@@ -43,10 +47,32 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Stack(fit: StackFit.expand, children: <Widget>[
-      BgImage(),
-    ]));
+    return Container(
+      color: HexColor("#f96021"),
+        child: Center(
+                child : Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image(
+                      image: AssetImage(
+                        "ASSETS/logo.png",
+                      ),
+                      width: 120,
+                      height: 120,
+                    ),
+
+                    Text(
+                      "BookSpot",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          decoration: TextDecoration.none,
+                      ),
+                    )
+                  ],
+                )
+        )
+    );
   }
 
   void forwardTo() async {

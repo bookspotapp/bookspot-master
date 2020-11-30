@@ -29,87 +29,89 @@ class _OTpScState extends State<OTpSc> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: GestureDetector(
-          child: Image(
-            image: AssetImage("ASSETS/logo.png"),
+    return SafeArea(
+        child: Scaffold(
+          appBar: AppBar(
+            leading: GestureDetector(
+              child: Image(
+                image: AssetImage("ASSETS/logo.png"),
+              ),
+            ),
+            backgroundColor: HexColor("#f9692d"),
+            elevation: 0.0,
           ),
-        ),
-        backgroundColor: HexColor("#f9692d"),
-        elevation: 0.0,
-      ),
 
-      body: Form(
-          child: Stack(
-            fit: StackFit.expand,
-            children: <Widget>[
-              SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(top: 50, right: 210),
-                        child: Text(
-                          "Enter OTP",
-                          style: TextStyle(
-                              fontSize: 25,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 40,
-                      ),
-                      TextFormField(
-                        style: TextStyle(
-                          color: Colors.black,
-                        ),
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Colors.white,
-                          hintText: 'Enter OTP',
-                          contentPadding: const EdgeInsets.only(
-                              left: 14.0, bottom: 8.0, top: 8.0),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(25.0),
+          body: Form(
+              child: Stack(
+                fit: StackFit.expand,
+                children: <Widget>[
+                  SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(top: 50, right: 210),
+                            child: Text(
+                              "Enter OTP",
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
                             ),
                           ),
-                        ),
-                        keyboardType: TextInputType.number,
-                        controller: otpController,
-                        onSaved: (String val) {
-                          number = val;
-                        },
+                          SizedBox(
+                            height: 40,
+                          ),
+                          TextFormField(
+                            style: TextStyle(
+                              color: Colors.black,
+                            ),
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.white,
+                              hintText: 'Enter OTP',
+                              contentPadding: const EdgeInsets.only(
+                                  left: 14.0, bottom: 8.0, top: 8.0),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(25.0),
+                                ),
+                              ),
+                            ),
+                            keyboardType: TextInputType.number,
+                            controller: otpController,
+                            onSaved: (String val) {
+                              number = val;
+                            },
+                          ),
+                          SizedBox(
+                            height: 310,
+                          ),
+                          MaterialButton(
+                            height: 52,
+                            minWidth: 323,
+                            color: HexColor("#f9692d"),
+                            textColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(24.0),
+                            ),
+                            child: Text(
+                              "verify",
+                              style: TextStyle(color: Colors.white, fontSize: 20.0),
+                            ),
+                            onPressed: () {
+                              _signInWithPhoneNumber(otpController.text.trim());
+                            },
+                            splashColor: Colors.redAccent,
+                          ),
+                        ],
                       ),
-                      SizedBox(
-                        height: 310,
-                      ),
-                      MaterialButton(
-                        height: 52,
-                        minWidth: 323,
-                        color: HexColor("#f9692d"),
-                        textColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(24.0),
-                        ),
-                        child: Text(
-                          "verify",
-                          style: TextStyle(color: Colors.white, fontSize: 20.0),
-                        ),
-                        onPressed: () {
-                          _signInWithPhoneNumber(otpController.text.trim());
-                        },
-                        splashColor: Colors.redAccent,
-                      ),
-                    ],
-                  ),
-                ),
-              )
-            ],
-          )),
+                    ),
+                  )
+                ],
+              )),
+        )
     );
   }
 

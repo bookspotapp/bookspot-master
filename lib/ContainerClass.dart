@@ -29,7 +29,8 @@ class OrderDetails{
 }
 
 class Order{
-  String fname, Stype, dt, tm, vid, st;
+  String fname, Stype, dt, tm, vid;
+  int st;
 
   Order(this.fname, this.Stype, this.dt, this.tm, this.vid, this.st);
 }
@@ -46,7 +47,7 @@ class Shop{
 }
 
 class Vendor{
-  String cno, fname, oname, add, email, website, addno, cat, services, total_tokens, sdate, stime, UID, rat, ltiming;
+  String cno, fname, oname, add, email, website, addno, cat, services, total_tokens, sdate, stime, UID, rat, ltiming, op;
   double lat, lng;
 
   Vendor(
@@ -66,7 +67,8 @@ class Vendor{
       this.rat,
       this.ltiming,
       this.lat,
-      this.lng);
+      this.lng,
+      this.op);
 }
 
 
