@@ -48,7 +48,8 @@ class _UpcomingState extends State<Upcoming> {
               elevation: 0.0,
             ),
 
-            body: Form(
+            body: customer.uid != null
+            ? Form(
                 child: Stack(
                   fit: StackFit.expand,
                   children: <Widget>[
@@ -85,7 +86,7 @@ class _UpcomingState extends State<Upcoming> {
                             ),
 
                             FutureBuilder(
-                              future: FirebaseDatabase.instance.reference().child("customers/${customer.uid}/services").orderByChild("st").endAt(3).once(),
+                              future: FirebaseDatabase.instance.reference().child("customers/${customer.uid}/services").orderByChild("st").endAt(2).once(),
                               builder: (context, data){
                                 if(data.hasData){
                                   DataSnapshot ds = data.data;
@@ -118,7 +119,7 @@ class _UpcomingState extends State<Upcoming> {
 
                                           return GestureDetector(
                                             onTap: (){
-                                              Navigator.pushReplacement(context, MaterialPageRoute(  builder: (context) => Time(customer, order),));
+                                              Navigator.pushReplacement(context, MaterialPageRoute(  builder: (context) => Time(customer, order, -1, null),));
                                             },
                                             child: Container(
                                               height: 200,
@@ -245,9 +246,22 @@ class _UpcomingState extends State<Upcoming> {
                                                     mainAxisAlignment: MainAxisAlignment
                                                         .center,
                                                     children: [
-                                                      if (order.st == 1) Text(
-                                                          "Pending") else
-                                                        Text("Accepted")
+                                                      if (order.st == 1)
+                                                        Text("Pending")
+                                                      else if(order.st == 2)
+                                                        FutureBuilder(
+                                                          future : FirebaseDatabase.instance.reference().child("vendors/${order.vid}/req").once(),
+                                                          builder: (context, data){
+                                                            if(data.hasData){
+                                                              DataSnapshot ds = data.data;
+                                                              if(ds.value != null){
+                                                                return Text("Waiting for Vendor's Response");
+                                                              }else
+                                                                return  Text("Accepted");
+                                                            }
+                                                            return Text("");
+                                                          },
+                                                        )
                                                     ],
                                                   )
                                                 ],
@@ -269,7 +283,8 @@ class _UpcomingState extends State<Upcoming> {
                       ),
                     )
                   ],
-                )),
+                ))
+            : Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.orange[800]),),),
           ),
         ),
 

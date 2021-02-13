@@ -1,12 +1,10 @@
 import 'dart:async';
 
-import 'package:bookspot/firstpage.dart';
 import 'package:bookspot/loginpage.dart';
-import 'package:bookspot/splash.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:bookspot/Introduction.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'ContainerClass.dart';
@@ -47,6 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Container(
       color: HexColor("#f96021"),
         child: Center(
@@ -78,24 +77,32 @@ class _MyHomePageState extends State<MyHomePage> {
   void forwardTo() async {
 
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    if(preferences.getBool("logged") == null) {
-      print("null ");
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) => LoginPage()));
-    } else {
-      print("not null");
-      bool login = preferences.getBool("logged");
-      if(login){
-        customer.nm = preferences.getString("name");
-        customer.uid = preferences.getString("uid");
-        customer.cno = preferences.getString("cno");
-
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => HomePage(customer)));
-      }else{
-
+    if(preferences.getBool("second") == null){
+      print("null");
+      Navigator.pushReplacement(context, MaterialPageRoute(
+        builder: (context) => Introduction()
+      ));
+    }else{
+      if(preferences.getBool("logged") == null) {
+        print("null ");
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) => LoginPage()));
+      } else {
+        print("not null");
+        bool login = preferences.getBool("logged");
+        if(login){
+          customer.nm = preferences.getString("name");
+          customer.uid = preferences.getString("uid");
+          customer.cno = preferences.getString("cno");
+          customer.email = preferences.getString("email");
+
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => HomePage(customer)));
+        }else{
+
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => LoginPage()));
+        }
       }
     }
   }

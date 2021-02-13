@@ -4,11 +4,15 @@ import 'package:bookspot/favorites.dart';
 import 'package:bookspot/history.dart';
 import 'package:bookspot/privacy.dart';
 import 'package:bookspot/settings.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'ContainerClass.dart';
 import 'homepage.dart';
@@ -24,7 +28,9 @@ class ProfileSetting extends StatefulWidget {
 
 class _ProfileSettingState extends State<ProfileSetting> {
   File _image;
+  bool buttonVisibility = true, progressVisibility = false;
   Customer customer;
+  SharedPreferences preferences;
   TextEditingController nameController = new TextEditingController(), cnoController = new TextEditingController(), emailController = new TextEditingController();
 
   _ProfileSettingState(this.customer);
@@ -39,10 +45,13 @@ class _ProfileSettingState extends State<ProfileSetting> {
   @override
   void initState() {
     // TODO: implement initState
-    nameController.text = customer.nm;
-    if(customer.email != null || customer.email != null)
+    initializeFirebase();
+    if(customer.nm != null)
+      nameController.text = customer.nm;
+    if(customer.email != null)
       emailController.text = customer.email;
-    cnoController.text = customer.cno;
+    if(customer.cno != null)
+      cnoController.text = customer.cno;
     super.initState();
   }
 
@@ -104,35 +113,55 @@ class _ProfileSettingState extends State<ProfileSetting> {
                               child: CircleAvatar(
                                 radius: 30.0,
                                 backgroundColor: Colors.grey[200],
-                                child: (_image != null)
-                                    ? Container(
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    image: DecorationImage(
-                                        image: FileImage(_image),
-                                        fit: BoxFit.cover),
-                                  ),
+                                child:  _image != null
+                                ? ClipRRect(
+                                  child: Image.file(_image),
+                                  borderRadius: BorderRadius.circular(250.0),
                                 )
-                                    : GestureDetector(
-                                  onTap: () {
-                                    getImage();
-                                  },
-                                  child: Image.asset(
-                                    'ASSETS/camera.png',
-                                    width: 40,
-                                    height: 40,
-                                    fit: BoxFit.fill,
-                                  ),
-                                ),
+                                : FutureBuilder(
+                                        future: FirebaseStorage.instance.ref().child("customers/${customer.uid}/profile.png").getDownloadURL(),
+                                        builder:(context, data){
+                                          if(data.hasData){
+                                            String url = data.data;
+                                            return  ClipRRect(
+                                              child: Image.network(url),
+                                              borderRadius: BorderRadius.circular(250.0),
+                                            );
+                                          }
+
+                                          return   GestureDetector(
+                                            onTap: () {
+                                              getImage();
+                                            },
+                                            child: _image != null
+                                              ? ClipRRect(
+                                                  child: Image.file(_image),
+                                                  borderRadius: BorderRadius.circular(250.0),
+                                                )
+                                                :  Image.asset(
+                                                      'ASSETS/camera.png',
+                                                      width: 40,
+                                                      height: 40,
+                                                      fit: BoxFit.fill,
+                                                    ),
+                                          );
+                                        },
+                                      ),
                               ),
                             ),
                             SizedBox(
                               height: 5,
                             ),
-                            Text(
-                              "Edit Photo",
-                              style: TextStyle(color: Colors.orange),
+                            GestureDetector(
+                              onTap: () {
+                                getImage();
+                              },
+                              child: Text(
+                                "Edit Photo",
+                                style: TextStyle(color: Colors.orange[800]),
+                              ),
                             ),
+
                             SizedBox(
                               height: 40,
                             ),
@@ -155,7 +184,6 @@ class _ProfileSettingState extends State<ProfileSetting> {
                               ),
 
                               controller: nameController,
-
                               keyboardType: TextInputType.text,
                             ),
                             SizedBox(
@@ -214,7 +242,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
                                 controller: cnoController,
                                 autovalidate: true,
                                 validator: (value) {
-                                  if (value.isEmpty || value.length != 10) {
+                                  if (value.isEmpty || value.length < 10) {
                                     return 'Enter valid Phone No.';
                                   }
                                   return null;
@@ -223,33 +251,60 @@ class _ProfileSettingState extends State<ProfileSetting> {
                             SizedBox(
                               height: 80,
                             ),
-                            MaterialButton(
-                              height: 52,
-                              minWidth: 323,
-                              color: HexColor("#f9692d"),
-                              textColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(24.0),
-                              ),
-                              child: Text(
-                                "Save Details",
-                                style: TextStyle(color: Colors.white, fontSize: 20.0),
-                              ),
-                              onPressed: () {
-                                if(nameController.text.trim().isNotEmpty && cnoController.text.trim().isNotEmpty && emailController.text.trim().isNotEmpty ) {
+                            Visibility(
+                                visible: buttonVisibility,
+                                child: MaterialButton(
+                                  height: 52,
+                                  minWidth: 323,
+                                  color: HexColor("#f9692d"),
+                                  textColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(24.0),
+                                  ),
+                                  child: Text(
+                                    "Save Details",
+                                    style: TextStyle(color: Colors.white, fontSize: 20.0),
+                                  ),
+                                  onPressed: () async {
+                                    if(nameController.text.trim().isNotEmpty && cnoController.text.trim().isNotEmpty && emailController.text.trim().isNotEmpty ) {
 
-                                  Fluttertoast.showToast(msg: "Details Saved!",
-                                      textColor: Colors.white,
-                                      timeInSecForIosWeb: 2,
-                                      gravity: ToastGravity.BOTTOM);
+                                      setState((){
+                                        buttonVisibility = false;
+                                        progressVisibility = true;
+                                      });
 
-                                  Navigator.pushReplacement(
-                                      context, MaterialPageRoute(
-                                      builder: (context) => HomePage(customer)));
-                                }
-                              },
-                              splashColor: Colors.redAccent,
+                                      preferences.setString("nm", nameController.text);
+                                      preferences.setString("cno", cnoController.text);
+                                      preferences.setString("email", emailController.text);
+
+                                      customer.nm = nameController.text;
+                                      customer.email = emailController.text;
+                                      customer.cno = cnoController.text;
+
+                                      FirebaseDatabase.instance.reference().child("customers/${customer.uid}/nm").set(nameController.text);
+                                      FirebaseDatabase.instance.reference().child("customers/${customer.uid}/cno").set(cnoController.text);
+                                      FirebaseDatabase.instance.reference().child("customers/${customer.uid}/email").set(emailController.text);
+                                      StorageReference storageReference = FirebaseStorage.instance.ref().child('customers/${customer.uid}/profile.png');
+                                      StorageUploadTask uploadTask = storageReference.putFile(_image);
+                                      await uploadTask.onComplete;
+                                      Fluttertoast.showToast(msg: "Details Saved!",
+                                          textColor: Colors.white,
+                                          timeInSecForIosWeb: 2,
+                                          gravity: ToastGravity.BOTTOM);
+
+                                      Navigator.pushReplacement(
+                                          context, MaterialPageRoute(
+                                          builder: (context) => HomePage(customer)));
+                                    }
+                                  },
+                                  splashColor: Colors.redAccent,
+                                )
                             ),
+
+                            Visibility(
+                              visible: progressVisibility,
+                              child:  CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.orange[800]),),
+                            )
                           ],
                         ),
                       ),
@@ -298,5 +353,10 @@ class _ProfileSettingState extends State<ProfileSetting> {
         }
     );
 
+  }
+
+  Future<void> initializeFirebase() async {
+    await Firebase.initializeApp();
+    preferences = await SharedPreferences.getInstance();
   }
 }

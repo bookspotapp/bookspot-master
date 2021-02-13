@@ -260,15 +260,15 @@ class _HomePageState extends State<HomePage> {
                           ),
                           IconButton(
                             icon: new Image.asset("ASSETS/instagram.png"),
-                            onPressed: () => _launchURL("https://www.facebook.com/aman.rastogi.90281"),
+                            onPressed: () => _launchURL("https://www.instagram.com/bookspot.app/"),
                           ),
                           IconButton(
                             icon: new Image.asset("ASSETS/facebook.png"),
-                            onPressed: () => _launchURL("https://www.facebook.com/aman.rastogi.90281"),
+                            onPressed: () => _launchURL("https://www.facebook.com/bookspotapp/"),
                           ),
                           IconButton(
                             icon: new Image.asset("ASSETS/twitter.png"),
-                            onPressed: () => _launchURL("https://www.facebook.com/aman.rastogi.90281"),
+                            onPressed: () => _launchURL("https://twitter.com/bookspotapp/"),
                           )
                         ],
                       )
@@ -358,7 +358,7 @@ class _HomePageState extends State<HomePage> {
                                           'ASSETS/Salons.png',
                                         ),
                                         fit: BoxFit.cover),
-                                    color: isButtonPressed[0] ? Colors.orange[800] : null,
+                                    splashColor: Colors.orange[800],
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(18.0),
                                       side: BorderSide(
@@ -366,11 +366,17 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                     ),
                                     onPressed: () {
-                                      setState(() {
-                                        isButtonPressed[0] = !isButtonPressed[0];
-                                        Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(builder: (context) => SalonFirst("Salon", customer, favList)));
+                                      setState(()  {
+                                          isButtonPressed[0] =
+                                          !isButtonPressed[0];
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      SalonFirst(
+                                                          "Salon", customer,
+                                                          favList, null)));
+
                                       });
 
                                     }),
@@ -395,10 +401,10 @@ class _HomePageState extends State<HomePage> {
                                     padding: EdgeInsets.all(0.0),
                                     child: Image(
                                         image: AssetImage(
-                                          'ASSETS/Restraunts.png',
+                                          'ASSETS/Restaurants.png',
                                         ),
                                         fit: BoxFit.cover),
-                                    color: isButtonPressed[1] ? Colors.orange[800] : null,
+                                    splashColor: Colors.orange[800],
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(18.0),
                                       side: BorderSide(
@@ -406,17 +412,23 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                     ),
                                     onPressed: () {
-                                      setState(() {
-                                        isButtonPressed[1] = !isButtonPressed[1];
-                                        Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(builder: (context) => SalonFirst("Restraunt", customer, favList)));
-                                      });
+                                      setState(()  {
+                                          isButtonPressed[1] =
+                                          !isButtonPressed[1];
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      SalonFirst(
+                                                          "Restaurant", customer,
+                                                          favList, null)));
+
+                                        });
 
                                     }),
 
                                 SizedBox(height: 10,),
-                                Text("Restraunts"),
+                                Text("Restaurants"),
                               ],
                             ),
                           ),
@@ -432,13 +444,13 @@ class _HomePageState extends State<HomePage> {
                             child: Column(
                               children: [
                                 FlatButton(
-                                    padding: EdgeInsets.all(0.0),
+                                    padding: EdgeInsets.all(5.0),
                                     child: Image(
                                         image: AssetImage(
-                                          'ASSETS/Clinics.png',
+                                          'ASSETS/Doctors.png',
                                         ),
                                         fit: BoxFit.cover),
-                                    color: isButtonPressed[2] ? Colors.orange[800] : null,
+                                    splashColor: Colors.orange[800],
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(18.0),
                                       side: BorderSide(
@@ -446,17 +458,23 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                     ),
                                     onPressed: () {
-                                      setState(() {
-                                        isButtonPressed[2] = !isButtonPressed[2];
-                                        Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(builder: (context) => SalonFirst("Clinic", customer, favList)));
+                                      setState(() async {
+                                          isButtonPressed[2] =
+                                          !isButtonPressed[2];
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      SalonFirst(
+                                                          "Doctor", customer,
+                                                          favList, null)));
+
                                       });
 
                                     }),
 
                                 SizedBox(height: 10,),
-                                Text("Salons"),
+                                Text("Doctors"),
                               ],
                             ),
                           ),
@@ -487,7 +505,7 @@ class _HomePageState extends State<HomePage> {
                                           'ASSETS/Diagnostic Centres.png',
                                         ),
                                         fit: BoxFit.cover),
-                                    color: isButtonPressed[3] ? Colors.orange[800] : null,
+                                    splashColor: Colors.orange[800],
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(18.0),
                                       side: BorderSide(
@@ -495,11 +513,18 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                     ),
                                     onPressed: () {
-                                      setState(() {
-                                        isButtonPressed[3] = !isButtonPressed[3];
-                                        Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(builder: (context) => SalonFirst("Diagnostic Centre", customer, favList)));
+                                      setState(() async {
+                                          isButtonPressed[3] =
+                                          !isButtonPressed[3];
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      SalonFirst(
+                                                          "Diagnostic Centre",
+                                                          customer, favList,
+                                                          null)));
+
                                       });
 
                                     }),
@@ -526,7 +551,7 @@ class _HomePageState extends State<HomePage> {
                                           'ASSETS/Service Centres.png',
                                         ),
                                         fit: BoxFit.cover),
-                                    color: isButtonPressed[4] ? Colors.orange[800] : null,
+                                    splashColor: Colors.orange[800],
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(18.0),
                                       side: BorderSide(
@@ -534,11 +559,18 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                     ),
                                     onPressed: () {
-                                      setState(() {
-                                        isButtonPressed[4] = !isButtonPressed[4];
-                                        Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(builder: (context) => SalonFirst("Service Centre", customer, favList)));
+                                      setState(() async {
+                                          isButtonPressed[4] =
+                                          !isButtonPressed[4];
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      SalonFirst(
+                                                          "Service Centre",
+                                                          customer, favList,
+                                                          null)));
+
                                       });
 
                                     }),
@@ -565,7 +597,7 @@ class _HomePageState extends State<HomePage> {
                                           'ASSETS/Gyms.png',
                                         ),
                                         fit: BoxFit.cover),
-                                    color: isButtonPressed[5] ? Colors.orange[800] : null,
+                                    splashColor: Colors.orange[800],
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(18.0),
                                       side: BorderSide(
@@ -573,17 +605,23 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                     ),
                                     onPressed: () {
-                                      setState(() {
-                                        isButtonPressed[5] = !isButtonPressed[5];
-                                        Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(builder: (context) => SalonFirst("Gym", customer, favList)));
+                                      setState(() async {
+                                          isButtonPressed[5] =
+                                          !isButtonPressed[5];
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      SalonFirst(
+                                                          "Gyms & Turf", customer,
+                                                          favList, null)));
+
                                       });
 
                                     }),
 
                                 SizedBox(height: 10,),
-                                Text("Gyms"),
+                                Text("Gyms & Turfs"),
                               ],
                             ),
                           ),
@@ -613,7 +651,7 @@ class _HomePageState extends State<HomePage> {
                                           'ASSETS/Banks.png',
                                         ),
                                         fit: BoxFit.cover),
-                                    color: isButtonPressed[6] ? Colors.orange[800] : null,
+                                    splashColor: Colors.orange[800],
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(18.0),
                                       side: BorderSide(
@@ -621,11 +659,17 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                     ),
                                     onPressed: () {
-                                      setState(() {
-                                        isButtonPressed[6] = !isButtonPressed[6];
-                                        Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(builder: (context) => SalonFirst("Bank", customer, favList)));
+                                      setState(() async {
+                                          isButtonPressed[6] =
+                                          !isButtonPressed[6];
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      SalonFirst(
+                                                          "Bank", customer,
+                                                          favList, null)));
+
                                       });
 
                                     }),
@@ -652,7 +696,7 @@ class _HomePageState extends State<HomePage> {
                                           'ASSETS/Retails.png',
                                         ),
                                         fit: BoxFit.cover),
-                                    color: isButtonPressed[7] ? Colors.orange[800] : null,
+                                    splashColor: Colors.orange[800],
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(18.0),
                                       side: BorderSide(
@@ -660,11 +704,17 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                     ),
                                     onPressed: () {
-                                      setState(() {
-                                        isButtonPressed[7] = !isButtonPressed[7];
-                                        Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(builder: (context) => SalonFirst("Retail", customer, favList)));
+                                      setState(() async {
+                                          isButtonPressed[7] =
+                                          !isButtonPressed[7];
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      SalonFirst(
+                                                          "Retail", customer,
+                                                          favList, null)));
+
                                       });
 
                                     }),
@@ -692,7 +742,7 @@ class _HomePageState extends State<HomePage> {
                                           'ASSETS/Government Offices.png',
                                         ),
                                         fit: BoxFit.cover),
-                                    color: isButtonPressed[8] ? Colors.orange[800] : null,
+                                    splashColor: Colors.orange[800],
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(18.0),
                                       side: BorderSide(
@@ -700,11 +750,18 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                     ),
                                     onPressed: () {
-                                      setState(() {
-                                        isButtonPressed[8] = !isButtonPressed[8];
-                                        Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(builder: (context) => SalonFirst("Government Office", customer, favList)));
+                                      setState(() async {
+                                          isButtonPressed[8] =
+                                          !isButtonPressed[8];
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      SalonFirst(
+                                                          "Government Office",
+                                                          customer, favList,
+                                                          null)));
+
                                       });
 
                                     }),

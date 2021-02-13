@@ -49,6 +49,9 @@ dependencies:
   slide_countdown_clock: ^1.0.3
   liquid_progress_indicator: ^0.3.2
   url_launcher: ^5.7.10
+  flutter_local_notifications: ^3.0.2
+  flutter_native_timezone: ^1.0.4
+  introduction_screen: ^1.0.9
   
   
 
@@ -62,7 +65,7 @@ dev_dependencies:
 flutter_icons:
   android: true
   ios: true
-  image_path: "ASSETS/logoo.jpg"
+  image_path: "ASSETS/logo.jpg"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -81,10 +84,10 @@ flutter:
     - ASSETS/logo.png
     - ASSETS/donespl.jpg
     - ASSETS/Banks.png
-    - ASSETS/Clinics.png
+    - ASSETS/Doctors.png
     - ASSETS/Diagnostic Centres.png
     - ASSETS/Salons.png
-    - ASSETS/Restraunts.png
+    - ASSETS/Restaurants.png
     - ASSETS/Service Centres.png
     - ASSETS/Gyms.png
     - ASSETS/Retails.png
@@ -97,7 +100,11 @@ flutter:
     - ASSETS/camera.png
     - ASSETS/Government Offices.png
     - ASSETS/cross.png
-   
+    - ASSETS/1.png
+    - ASSETS/2.png
+    - ASSETS/3.png
+    - ASSETS/4.png
+    - ASSETS/bookspot.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

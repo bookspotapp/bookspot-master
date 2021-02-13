@@ -79,7 +79,7 @@ class _ServicesState extends State<Services> {
                                 Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => SalonFirst(cat, customer, fav)));
+                                        builder: (context) => SalonFirst(cat, customer, fav, null)));
                               },
                             ),
                           ),
@@ -119,7 +119,7 @@ class _ServicesState extends State<Services> {
                                     ),
                                     vendor != null
                                         ? Container(
-                                      width: 170,
+                                      width: 140,
                                       padding: EdgeInsets.all(5),
                                       child: Text(
                                         vendor.fname,
@@ -180,15 +180,15 @@ class _ServicesState extends State<Services> {
 
                                       items: servicesList != null
                                           ? servicesList.map<DropdownMenuItem<String>>((String value){
-                                        return DropdownMenuItem<String>(
-                                          value: value,
-                                          child: new Text(value),
-                                        );
-                                      }).toList()
+                                              return DropdownMenuItem<String>(
+                                                value: value,
+                                                child: new Text(value),
+                                              );
+                                            }).toList()
                                           : [ DropdownMenuItem<String>(
-                                        value: "abc",
-                                        child: new Text("def"),
-                                      )],
+                                              value: "abc",
+                                              child: new Text("def"),
+                                            )],
 
                                       onChanged: (value) {
                                         setState(() {
@@ -364,7 +364,7 @@ class _ServicesState extends State<Services> {
           item["total_tokens"],
           item["sdate"],
           item["stime"],
-          item["UID"],
+          item["uid"],
           item["rat"],
           item["ltiming"],
           item["lat"],

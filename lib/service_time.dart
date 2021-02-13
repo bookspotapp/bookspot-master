@@ -12,20 +12,23 @@ import 'homepage.dart';
 class Time extends StatefulWidget {
   Customer customer;
   Order order;
+  int myPlace;
+  String token_value;
 
-  Time(this.customer, this.order);
+  Time(this.customer, this.order, this.myPlace, this.token_value);
 
   @override
-  _TimeState createState() => _TimeState(customer, order);
+  _TimeState createState() => _TimeState(customer, order, myPlace, token_value);
 }
 
 class _TimeState extends State<Time> {
   int tkn = 0;
   Customer customer;
   Order order;
+  int myPlace;
+  String token_value;
 
-
-  _TimeState(this.customer, this.order);
+  _TimeState(this.customer, this.order, this.myPlace, this.token_value);
 
   final interval = const Duration(seconds: 1);
 
@@ -50,8 +53,10 @@ class _TimeState extends State<Time> {
   @override
   void initState() {
     initializeFirebase();
-    startTimeout();
-    setTimerDuration();
+    if(token_value != null && token_value.isNotEmpty)
+      setTimerDuration();
+    else
+      getTknDetails();
     super.initState();
   }
 
@@ -71,7 +76,8 @@ class _TimeState extends State<Time> {
             elevation: 0.0,
           ),
 
-          body: Form(
+          body: token_value != null && token_value.isNotEmpty
+          ? Form(
             child: Stack(
               children: [
                 Padding(
@@ -145,28 +151,7 @@ class _TimeState extends State<Time> {
                                 fontWeight: FontWeight.bold),
                           ),
                           SizedBox(width: 30,),
-                          FutureBuilder(
-                            future: FirebaseDatabase.instance.reference().child("orders/${order.vid}/tkn").once(),
-                            builder: (context, data){
-                              if(data.hasData){
-                                DataSnapshot ds = data.data;
-
-                                tkn = ds.value;
-
-                                return ds.value != null
-                                    ? Text(
-                                  (ds.value).toString(),
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                )
-                                    : Text("Loading....");
-                              }
-                              return Text('Loading....');
-                            },
-                          )
+                          Text(token_value)
                         ],
                       ),
                       SizedBox(height: 20),
@@ -180,26 +165,7 @@ class _TimeState extends State<Time> {
                                 fontWeight: FontWeight.bold),
                           ),
                           SizedBox(width: 30,),
-                          FutureBuilder(
-                            future: FirebaseDatabase.instance.reference().child("orders/${order.vid}/tkn_d").once(),
-                            builder: (context, data){
-                              if(data.hasData && tkn != 0){
-                                DataSnapshot ds = data.data;
-
-                                return ds.value != null
-                                    ? Text(
-                                  (tkn - ds.value).toString(),
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                )
-                                    : Text("Loading....");
-                              }
-                              return Text('Loading....');
-                            },
-                          )
+                          if (myPlace == -1) Text("Not alloted") else Text("$myPlace"),
                         ],
                       ),
                       SizedBox(height: 120),
@@ -227,7 +193,8 @@ class _TimeState extends State<Time> {
                 )
               ],
             ),
-          ),
+          )
+          : Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.orange[800]),)),
         )
     );
   }
@@ -238,8 +205,8 @@ class _TimeState extends State<Time> {
 
     print("dt = $dt tm = $tm");
 
-    if(tm[3].compareTo("PM") == 0){
-      tm[0] = (int.parse(tm[0]) + 24).toString();
+    if(tm.last.compareTo("PM") == 0){
+      tm[0] = (int.parse(tm[0]) + 12).toString();
     }
 
     DateTime now = DateTime.now();
@@ -257,7 +224,39 @@ class _TimeState extends State<Time> {
 
   void initializeFirebase() async {
     await Firebase.initializeApp();
-
     print("order = ${order.vid}");
   }
+
+  void getTknDetails() async {
+    DataSnapshot tkn = await FirebaseDatabase.instance.reference().child("orders/${order.vid}/order/${customer.uid}/tkn").once();
+    DataSnapshot tkn_d = await FirebaseDatabase.instance.reference().child("orders/${order.vid}/tkn_d").once();
+
+    int token = tkn.value;
+    int myPlace = -1;
+
+    int hr = 0;
+    if(order.tm.split(" ")[3].compareTo("PM") == 0 && order.tm.split(" ")[0].compareTo("11") != 0 && order.tm.split(" ")[0].compareTo("12") != 0){
+      hr += 12;
+    }
+    hr += int.parse(order.tm.split(" ")[0]);
+
+    if(tkn_d.value != null) {
+      String dls = tkn_d.value;
+      List<String> dl = dls.split("-");
+      if(int.parse(dl[0]) == hr)
+        myPlace = token - int.parse(dl.last);
+      else
+        myPlace = token;
+    }else{
+      DateTime now = DateTime.now();
+      if(now.hour == hr)
+        myPlace = tkn.value;
+      else
+        myPlace = token;
+    }
+
+    String token_value = "${order.tm.split(" ")[0]}$token";
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Time(customer, order, myPlace, token_value)));
+  }
+
 }

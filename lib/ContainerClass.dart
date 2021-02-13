@@ -14,16 +14,13 @@ class OrderDetails{
   String Stype;
   String nm;
   bool com;
-  int tkn;
   int sbk;
-
-
   OrderDetails(
       this.uid, this.cno, this.Stype, this.nm, this.com, this.sbk);
 
   @override
   String toString() {
-    return '$uid,$cno,$bTime,$bDate,$Stype,$nm,$com,$tkn,$sbk';
+    return '$uid,$cno,$bTime,$bDate,$Stype,$nm,$com,$sbk';
   }
 
 }
@@ -40,6 +37,7 @@ class Shop{
   String name;
   double lat;
   double lng;
+  double distInKm;
   String dist;
   bool fav;
 
